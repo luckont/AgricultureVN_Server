@@ -3,6 +3,10 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 
+const authRoute = require("./src/routes/authRoute")
+const userRoute = require("./src/routes/userRoute")
+
+
 const config = require("./src/configs");
 
 const PORT = config.app.port;
@@ -16,6 +20,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 //route
+app.use("/auth", authRoute)
+app.use("/user", userRoute)
 
 //database connection
 mongoose
@@ -24,7 +30,7 @@ mongoose
   .catch((err) => console.error(err));
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
 
 app.get("/", (req, res) => {
