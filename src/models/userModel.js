@@ -30,6 +30,10 @@ const userSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
+    desc: {
+      type: String,
+      maxlength: 50,
+    },
     admin: {
       type: Boolean,
       default: false,

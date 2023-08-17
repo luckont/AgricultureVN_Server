@@ -3,9 +3,10 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 
-const authRoute = require("./src/routes/authRoute")
-const userRoute = require("./src/routes/userRoute")
-
+const authRoute = require("./src/routes/authRoute");
+const userRoute = require("./src/routes/userRoute");
+const postRoute = require("./src/routes/postRoute");
+const cloudinaryRoute = require("./src/routes/cloudinaryRoute");
 
 const config = require("./src/configs");
 
@@ -20,8 +21,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 //route
-app.use("/auth", authRoute)
-app.use("/user", userRoute)
+app.use("/auth", authRoute);
+app.use("/user", userRoute);
+app.use("/post", postRoute);
+app.use("/upload", cloudinaryRoute);
 
 //database connection
 mongoose
