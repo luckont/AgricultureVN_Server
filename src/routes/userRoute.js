@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const userController = require("../controllers/userController");
 const fileUploader = require("../middlewares/cloudinaryMiddleware");
+// const jwtMiddleware = require("../middlewares/jwtMiddleware");
 
 //get all user
 router.get("/", userController.getAllUsers);
@@ -12,7 +13,11 @@ router.get("/:id", userController.getUser);
 router.delete("/:id", userController.deleteUser);
 
 //update user
-router.put("/:id", fileUploader.single("profilePicture"), userController.updateUserById);
+router.put(
+  "/:id",
+  fileUploader.single("profilePicture"),
+  userController.updateUserById
+);
 
 //follow user
 router.put("/:id/follow", userController.followUser);

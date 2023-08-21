@@ -18,13 +18,10 @@ const postSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
-    // comment: {
-    //     type: Array,
-    //     default:[],
-    //     content: String,
-    //     createAt: {type: Date, default: Date.now()},
-    //     createdBy: {type: ObjectId, ref: "User"}
-    // }
+    comments: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Comment',
+    }],
   },
   { timestamps: true }
 );
