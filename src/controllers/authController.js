@@ -12,7 +12,7 @@ const authController = {
         admin: user.admin,
       },
       process.env.JWT_ACCESS_KEY,
-      { expiresIn: "2h" }
+      { expiresIn: "30s" }
     );
   },
 
@@ -89,6 +89,11 @@ const authController = {
     } catch (err) {
       return res.status(500).json(err);
     }
+  },
+
+  logoutUser: async (req, res) => {
+    res.clearCookie("refreshToken");
+    return res.status(200).json("Logged out !");
   },
 
   requestRefreshtoken: async (req, res) => {

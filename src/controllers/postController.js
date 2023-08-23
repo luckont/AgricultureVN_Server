@@ -5,10 +5,10 @@ const postController = {
   createPost: async (req, res) => {
     try {
       const updatePost = req.body;
-      // const files = req.files;
-      // if (files) {
-      //   postData.img = files.map((file) => file.path);
-      // }
+      const files = req.files;
+      if (files) {
+        updatePost.img = files.map((file) => file.path);
+      }
       const newPost = await new Post(updatePost);
       const post = await newPost.save();
       return res.status(200).json(post);

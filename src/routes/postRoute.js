@@ -1,9 +1,10 @@
 const postController = require("../controllers/postController");
 const commentController = require("../controllers/commentController");
+const fileUploader = require("../middlewares/cloudinaryMiddleware");
 const router = require("express").Router();
 
 //create post
-router.post("/", postController.createPost);
+router.post("/",fileUploader.array("img"), postController.createPost);
 
 //get post
 router.get("/:id", postController.getPost);
