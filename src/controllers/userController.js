@@ -5,7 +5,7 @@ const userController = {
   // GET ALL USERS
   getAllUsers: async (req, res) => {
     try {
-      const user = await User.find();
+      const user = await User.find().populate("subscribes followers");
       return res.status(200).json(user);
     } catch (err) {
       return res.status(500).json(err);
@@ -14,7 +14,7 @@ const userController = {
   // GET USER
   getUser: async (req, res) => {
     try {
-      const user = await User.findById(req.params.id);
+      const user = await User.findById(req.params.id).populate("subscribes followers");
       return res.status(200).json(user);
     } catch (err) {
       return res.status(500).json(err);

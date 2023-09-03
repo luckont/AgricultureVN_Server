@@ -24,7 +24,7 @@ const authController = {
         admin: user.admin,
       },
       process.env.JWT_REFRESH_KEY,
-      { expiresIn: "365d" }
+      { expiresIn: "30d" }
     );
   },
 
@@ -32,6 +32,15 @@ const authController = {
   registerUser: async (req, res) => {
     try {
       const salt = await bcrypt.genSalt(10);
+
+      const phNum = await User.findOne({ phoneNumber: req.body.phoneNumber })
+      if (phNum) return res.status(400).json({ msg: "Số điện thoại đã được đăng ký !" })
+
+      const name = await User.findOne({ username: req.body.username })
+      if (name) return res.status(400).json({ msg: "Tên đăng nhập đã được đăng ký !" })
+
+      if (req.body.password.length < 6) return res.status(400).json({ msg: "Mật khẩu phải nhiều hơn 6 ký tự !" })
+
       const hashed = await bcrypt.hash(req.body.password, salt);
 
       const newUser = await new User({
@@ -39,27 +48,26 @@ const authController = {
         phoneNumber: req.body.phoneNumber,
         password: hashed,
       });
-
-      const user = await newUser.save();
-      return res.status(200).json(user);
+      await newUser.save();
+      return res.status(200).json({ msg: "Đăng ký thành công !" });
     } catch (err) {
-      return res.status(500).json(err);
+      return res.status(500).json({ msg: err.message });
     }
   },
 
   //login
   loginUser: async (req, res) => {
     try {
-      const user = await User.findOne({ phoneNumber: req.body.phoneNumber });
+      const user = await User.findOne({ phoneNumber: req.body.phoneNumber }).populate("followers subscribes");
       if (!user) {
-        return res.status(404).json("Wrong phone number !");
+        return res.status(404).json({ msg: "Số điện thoại chưa đúng !" });
       }
       const validPassword = await bcrypt.compare(
         req.body.password,
         user.password
       );
       if (!validPassword) {
-        return res.status(404).json("Wrong password !");
+        return res.status(404).json({ msg: "Mật khẩu chưa đúng !" });
       }
       if (user && validPassword) {
         const accessToken = authController.generateAccessToken(user);
@@ -72,10 +80,10 @@ const authController = {
             userId: user.id,
           });
           await newRefreshToken.save();
-          console.log("them refreshtoken vao database thanh cong !");
+          console.log("Them refreshtoken vao database thanh cong !");
         } else {
           await RefreshToken.findOneAndUpdate({ token: refreshToken });
-          console.log("refrestoken da ton tai");
+          console.log("Refrestoken da ton tai");
         }
         res.cookie("refreshToken", refreshToken, {
           httpOnly: true,
@@ -84,16 +92,20 @@ const authController = {
           sameSite: "strict",
         });
         const { password, ...others } = user._doc;
-        return res.status(200).json({ ...others, accessToken, refreshToken });
+        return res.status(200).json({ msg: "Đăng nhập thành công !", accessToken, ...others });
       }
     } catch (err) {
-      return res.status(500).json(err);
+      return res.status(500).json({ msg: err.message });
     }
   },
 
   logoutUser: async (req, res) => {
-    res.clearCookie("refreshToken");
-    return res.status(200).json("Logged out !");
+    try {
+      res.clearCookie("refreshToken");
+      return res.status(200).json({ msg: "Đăng xuất thành công !" });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
   },
 
   requestRefreshtoken: async (req, res) => {
@@ -112,7 +124,6 @@ const authController = {
       }
       const newAccessToken = authController.generateAccessToken(user);
       const newRefreshToken = authController.generateRefreshToken(user);
-      console.log(newRefreshToken)
       await RefreshToken.findOneAndUpdate({ token: newRefreshToken });
       res.cookie("refreshToken", newRefreshToken, {
         httpOnly: true,
@@ -120,7 +131,8 @@ const authController = {
         path: "/",
         sameSite: "strict",
       });
-      return res.status(200).json({ acccessToken: newAccessToken });
+      const userR = await User.findById(user.id).select("-password").populate("followers subscribes")
+      return res.status(200).json({ accessToken: newAccessToken, userR });
     });
   },
 };

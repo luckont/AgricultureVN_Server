@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema(
     phoneNumber: {
       type: String,
       require: true,
-      unique: true,
+      // unique: true,
     },
     password: {
       type: String,
@@ -20,16 +20,16 @@ const userSchema = new mongoose.Schema(
     },
     profilePicture: {
       type: String,
-      default: "",
+      default: "https://res.cloudinary.com/duw0njssy/image/upload/v1693238698/image_user_AgricultureVN/image_default_AgricultureVN/logo_dung_g3fay1.png",
     },
-    followers: {
-      type: Array,
-      default: [],
-    },
-    subscribes: {
-      type: Array,
-      default: [],
-    },
+    followers:  [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    }],
+    subscribes:  [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    }],
     desc: {
       type: String,
       maxlength: 50,
@@ -43,3 +43,8 @@ const userSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model("User", userSchema);
+
+// [{
+//   type: mongoose.Schema.Types.ObjectId,
+//   ref: 'User',
+// }]
