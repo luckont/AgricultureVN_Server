@@ -131,8 +131,10 @@ const authController = {
         path: "/",
         sameSite: "strict",
       });
-      const userR = await User.findById(user.id).select("-password").populate("followers subscribes")
-      return res.status(200).json({ accessToken: newAccessToken, userR });
+      const newUser = await User.findById(user.id).select("-password").populate("followers subscribes")
+      const { password, ...others } = newUser._doc;
+      const userR = { ...others, accessToken: newAccessToken };
+      return res.status(200).json(userR);
     });
   },
 };
