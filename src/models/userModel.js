@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema(
     },
     profilePicture: {
       type: String,
-      default: "https://res.cloudinary.com/duw0njssy/image/upload/v1693238698/image_user_AgricultureVN/image_default_AgricultureVN/logo_dung_g3fay1.png",
+      default: "https://res.cloudinary.com/duw0njssy/image/upload/v1694457101/image_default_AgricultureVN/logo_dung_oo6hvt.png",
     },
     followers:  [{
       type: mongoose.Schema.Types.ObjectId,

@@ -5,7 +5,9 @@ const userController = {
   // GET ALL USERS
   getAllUsers: async (req, res) => {
     try {
-      const user = await User.find().populate("subscribes followers");
+      const user = await User.find()
+        .populate("subscribes followers")
+        .select("-password");
       return res.status(200).json(user);
     } catch (err) {
       return res.status(500).json(err);
@@ -14,10 +16,12 @@ const userController = {
   // GET USER
   getUser: async (req, res) => {
     try {
-      const user = await User.findById(req.params.id).populate("subscribes followers");
-      return res.status(200).json(user);
+      const user = await User.findById(req.params.id)
+        .populate("subscribes followers")
+        .select("-password");
+      return res.status(200).json({ user });
     } catch (err) {
-      return res.status(500).json(err);
+      return res.status(500).json({ msg: err.message });
     }
   },
 
@@ -36,10 +40,6 @@ const userController = {
   updateUserById: async (req, res) => {
     try {
       let updateData = req.body;
-      // console.log(req.file.path)
-      if (req.file.path) {
-        updateData = { ...updateData, profilePicture: req.file.path };
-      }
       if (req.body.password) {
         const salt = await bcrypt.genSalt(10);
         const hashed = await bcrypt.hash(req.body.password, salt);
@@ -54,11 +54,10 @@ const userController = {
       if (!user) {
         return res.status(404).json("No user !");
       }
-      return res
-        .status(200)
-        .json(`Successfully updated user ${req.body.username} !`);
+
+      return res.status(200).json({ msg: "Cập nhật thông tin thành công !" });
     } catch (err) {
-      return res.status(500).json(err);
+      return res.status(500).json({ msg: err.message });
     }
   },
 
@@ -91,6 +90,20 @@ const userController = {
       } else {
         return res.status(403).json("You allready unfollow this user !");
       }
+    } catch (err) {
+      return res.status(500).json(err);
+    }
+  },
+
+  //search user
+  searchUser: async (req, res) => {
+    try {
+      const users = await User.find({
+        username: { $regex: req.query.username },
+      })
+        .limit(5)
+        .select("username profilePicture");
+      return res.json({ users });
     } catch (err) {
       return res.status(500).json(err);
     }
