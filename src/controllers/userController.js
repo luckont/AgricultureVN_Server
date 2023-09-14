@@ -6,7 +6,7 @@ const userController = {
   getAllUsers: async (req, res) => {
     try {
       const user = await User.find()
-        .populate("subscribes followers")
+        .populate("subscribes followers", "-password")
         .select("-password");
       return res.status(200).json(user);
     } catch (err) {
@@ -17,7 +17,7 @@ const userController = {
   getUser: async (req, res) => {
     try {
       const user = await User.findById(req.params.id)
-        .populate("subscribes followers")
+        .populate("subscribes followers", "-password")
         .select("-password");
       return res.status(200).json({ user });
     } catch (err) {
@@ -64,34 +64,60 @@ const userController = {
   //follow user
   followUser: async (req, res) => {
     try {
-      const user = await User.findById(req.params.id);
-      const currentUser = await User.findById(req.body.userId);
-      if (!user.followers.includes(req.body.userId)) {
-        await user.updateOne({ $push: { followers: req.body.userId } });
-        await currentUser.updateOne({ $push: { subscribes: req.params.id } });
-        return res.status(200).json("User had been followed !");
-      } else {
-        return res.status(403).json("You allready follow this user !");
-      }
+      const user = await User.find({
+        _id: req.params.id,
+        followers: req.user.id,
+      });
+
+      if (user.length > 0)
+        return res
+          .status(500)
+          .json({ msg: "Bạn đã theo dõi người dùng này !" });
+
+      await User.findOneAndUpdate(
+        { _id: req.params.id },
+        {
+          $push: { followers: req.user.id },
+        },
+        { new: true }
+      );
+
+      await User.findByIdAndUpdate(
+        { _id: req.user.id },
+        {
+          $push: { subscribes: req.params.id },
+        },
+        { new: true }
+      );
+
+      res.json({ msg: "Bạn đã bắt đầu theo dõi người này !" });
     } catch (err) {
-      return res.status(500).json(err);
+      return res.status(500).json({ msg: err.message });
     }
   },
 
   //unfollow user
   unfollowUser: async (req, res) => {
     try {
-      const user = await User.findById(req.params.id);
-      const currentUser = await User.findById(req.body.userId);
-      if (user.followers.includes(req.body.userId)) {
-        await user.updateOne({ $pull: { followers: req.body.userId } });
-        await currentUser.updateOne({ $pull: { subscribes: req.params.id } });
-        return res.status(200).json("User had been unfollowed !");
-      } else {
-        return res.status(403).json("You allready unfollow this user !");
-      }
+      await User.findOneAndUpdate(
+        { _id: req.params.id },
+        {
+          $pull: { followers: req.user.id },
+        },
+        { new: true }
+      );
+
+      await User.findByIdAndUpdate(
+        { _id: req.user.id },
+        {
+          $pull: { subscribes: req.params.id },
+        },
+        { new: true }
+      );
+
+      res.json({ msg: "Bạn đã bỏ theo dõi người này !" });
     } catch (err) {
-      return res.status(500).json(err);
+      return res.status(500).json({ msg: err.message });
     }
   },
 
