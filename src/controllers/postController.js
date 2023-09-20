@@ -4,24 +4,27 @@ const postController = {
   // create post
   createPost: async (req, res) => {
     try {
-      const updatePost = req.body;
-      const files = req.files;
-      if (files) {
-        updatePost.img = files.map((file) => file.path);
-      }
-      const newPost = await new Post(updatePost);
-      const post = await newPost.save();
-      return res.status(200).json(post);
+      const { desc, img } = req.body;
+      const newPost = new Post({desc, img, user: req.user.id}) 
+      await newPost.save();
+      return res.status(200).json({newPost, msg: "Tạo bài viết mới thành công !"});
     } catch (err) {
-      return res.status(500).json(err);
+      return res.status(500).json({ msg: err.message });
     }
   },
 
   // get all post
   getAllPost: async (req, res) => {
     try {
-      const post = await Post.find();
-      return res.status(200).json(post);
+      console.log(req.user)
+      const post = await Post.find({
+        user: [req.user.id]
+      }).populate("user", "-password");
+      return res.status(200).json({
+        msg: "Lấy bài viết thành công !",
+        result: post.length,
+        post
+      });
     } catch (err) {
       return res.status(500).json(err);
     }

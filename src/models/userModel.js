@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema(
     phoneNumber: {
       type: String,
       require: true,
-      // unique: true,
+      unique: true,
     },
     password: {
       type: String,
@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema(
     },
     profilePicture: {
       type: String,
-      default: "https://res.cloudinary.com/duw0njssy/image/upload/v1694457101/image_default_AgricultureVN/logo_dung_oo6hvt.png",
+      default: "https://res.cloudinary.com/duw0njssy/image/upload/v1695198799/image_default_AgricultureVN/logo_only_s3ioxv.png",
     },
     followers:  [{
       type: mongoose.Schema.Types.ObjectId,

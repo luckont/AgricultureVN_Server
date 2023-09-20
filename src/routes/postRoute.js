@@ -1,16 +1,16 @@
 const postController = require("../controllers/postController");
 const commentController = require("../controllers/commentController");
-const fileUploader = require("../middlewares/cloudinaryMiddleware");
+const jwtMiddleware = require("../middlewares/jwtMiddleware")
 const router = require("express").Router();
 
 //create post
-router.post("/",fileUploader.array("img"), postController.createPost);
+router.post("/", jwtMiddleware.verifyToken, postController.createPost);
 
 //get post
-router.get("/:id", postController.getPost);
+router.get("/:id", jwtMiddleware.verifyToken, postController.getPost);
 
 //get all post
-router.get("/", postController.getAllPost);
+router.get("/", jwtMiddleware.verifyToken, postController.getAllPost);
 
 //update post
 router.put("/:id", postController.updatePost);
