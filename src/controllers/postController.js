@@ -16,7 +16,6 @@ const postController = {
   // get all post
   getAllPost: async (req, res) => {
     try {
-      console.log(req.user)
       const post = await Post.find({
         user: [req.user.id]
       }).populate("user", "-password");
