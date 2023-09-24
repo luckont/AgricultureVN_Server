@@ -13,13 +13,16 @@ router.get("/:id", jwtMiddleware.verifyToken, postController.getPost);
 router.get("/", jwtMiddleware.verifyToken, postController.getAllPost);
 
 //update post
-router.put("/:id", postController.updatePost);
+router.put("/:id", jwtMiddleware.verifyToken, postController.updatePost);
 
 //delete post
 router.delete("/:id", postController.deletePost);
 
-//liek and dislike post
-router.put("/:id/like", postController.likeAndDislikePost);
+//like post
+router.put("/:id/like", jwtMiddleware.verifyToken, postController.likePost);
+
+//unlike post
+router.put("/:id/unlike", jwtMiddleware.verifyToken, postController.unlikePost);
 
 //create comment
 router.post("/:postId/comment", commentController.createComment);
