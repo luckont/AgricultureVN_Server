@@ -127,7 +127,7 @@ const userController = {
       const users = await User.find({
         username: { $regex: req.query.username },
       })
-        .limit(5)
+        .limit(10)
         .select("username profilePicture");
       return res.json({ users });
     } catch (err) {

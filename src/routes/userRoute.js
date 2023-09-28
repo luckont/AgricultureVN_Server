@@ -13,7 +13,7 @@ router.get("/:id", jwtMiddleware.verifyToken, userController.getUser);
 router.delete("/:id", userController.deleteUser);
 
 //update user
-router.put("/:id", jwtMiddleware.verifyTokenAndAdmin, userController.updateUserById);
+router.put("/:id", jwtMiddleware.verifyToken, userController.updateUserById);
 
 //follow user
 router.put("/:id/follow", jwtMiddleware.verifyToken, userController.followUser);

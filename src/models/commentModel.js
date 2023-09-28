@@ -2,23 +2,21 @@ const mongoose = require("mongoose");
 
 const commentSchema = new mongoose.Schema(
   {
-    postId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Post",
+    content: {
+      type: String,
       required: true,
     },
-    userId: {
+    tag: Object,
+    reply: mongoose.Schema.Types.ObjectId,
+    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
     },
-    content: {
-      type: String, 
-      required: true,
-    },
+    postId: mongoose.Schema.Types.ObjectId,
+    postUserId: mongoose.Schema.Types.ObjectId,
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Comment", commentSchema);
-
+module.exports = mongoose.model("Comments", commentSchema);

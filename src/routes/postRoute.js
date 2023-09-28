@@ -1,5 +1,4 @@
 const postController = require("../controllers/postController");
-const commentController = require("../controllers/commentController");
 const jwtMiddleware = require("../middlewares/jwtMiddleware")
 const router = require("express").Router();
 
@@ -23,8 +22,5 @@ router.put("/:id/like", jwtMiddleware.verifyToken, postController.likePost);
 
 //unlike post
 router.put("/:id/unlike", jwtMiddleware.verifyToken, postController.unlikePost);
-
-//create comment
-router.post("/:postId/comment", commentController.createComment);
 
 module.exports = router;

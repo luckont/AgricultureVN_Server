@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const authRoute = require("./src/routes/authRoute");
 const userRoute = require("./src/routes/userRoute");
 const postRoute = require("./src/routes/postRoute");
+const commentRoute = require("./src/routes/commentRoute");
 
 const config = require("./src/configs");
 
@@ -23,6 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/auth", authRoute);
 app.use("/user", userRoute);
 app.use("/post", postRoute);
+app.use("/comment", commentRoute);
 
 //database connection
 mongoose

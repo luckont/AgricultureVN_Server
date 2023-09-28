@@ -5,7 +5,7 @@ const postController = {
   createPost: async (req, res) => {
     try {
       const { desc, img } = req.body;
-      const newPost = new Post({ desc, img, user: req.user.id });
+      const newPost = new Post({ desc, img, user: req.user._id });
       await newPost.save();
       return res
         .status(200)
@@ -19,15 +19,21 @@ const postController = {
   getAllPost: async (req, res) => {
     try {
       const post = await Post.find({
-        user: [req.user.id],
-      }).populate("user", "-password");
+        user: [...req.user.subscribes, req.user._id],
+      })
+        .sort("-createdAt")
+        .populate("user like", " -password")
+        .populate({
+          path: "comments",
+          populate: { path: "user likes", select: "-password" },
+        });
       return res.status(200).json({
         msg: "Lấy bài viết thành công !",
         result: post.length,
         post,
       });
     } catch (err) {
-      return res.status(500).json(err);
+      return res.status(500).json({ msg: err.message });
     }
   },
 
@@ -52,7 +58,12 @@ const postController = {
           desc,
           img,
         }
-      ).populate("user like", "profilePicture username");
+      )
+      .populate("user like", "profilePicture username")
+      .populate({
+        path: "comments",
+        populate: { path: "user likes", select: "-password" },
+      });
       return res.status(200).json({
         msg: "Cập nhật bài viết thành công !",
         newPost: {
@@ -84,13 +95,16 @@ const postController = {
   // like and dislike post
   likePost: async (req, res) => {
     try {
-      const post = await Post.find({_id: req.params.id, like: req.user.id})
-      if(post.length > 0) return res.status(403).json({msg: "Bạn đã thích bài viết nảy rồi 1"})
-      await Post.findOneAndUpdate({_id: req.params.id},
+      const post = await Post.find({ _id: req.params.id, like: req.user._id });
+      if (post.length > 0)
+        return res.status(403).json({ msg: "Bạn đã thích bài viết nảy rồi !" });
+      await Post.findOneAndUpdate(
+        { _id: req.params.id },
         {
-          $push: { like: req.user.id },
+          $push: { like: req.user._id },
         },
-        { new: true });
+        { new: true }
+      );
 
       res.json({ msg: "Bạn vừa thích bài viết này !" });
     } catch (err) {
@@ -100,12 +114,13 @@ const postController = {
 
   unlikePost: async (req, res) => {
     try {
-      await Post.findOneAndUpdate({_id: req.params.id},
+      await Post.findOneAndUpdate(
+        { _id: req.params.id },
         {
-          $pull: { like: req.user.id },
+          $pull: { like: req.user._id },
         },
-        { new: true });
-
+        { new: true }
+      );
       res.json({ msg: "Bạn đã bỏ thích bài viết này !" });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
