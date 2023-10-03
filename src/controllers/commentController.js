@@ -7,7 +7,7 @@ const commentController = {
       const { postId, content, tag, reply, postUserId } = req.body;
 
       const post = await Post.findById(postId)
-      if(!post) return res.status(400).json({msg: "Bài viết không tồn tại 1"})
+      if(!post) return res.status(400).json({msg: "Bài viết không tồn tại !"})
 
       if(reply){
           const cm = await Comment.findById(reply)
@@ -83,7 +83,7 @@ const commentController = {
       await Post.findOneAndUpdate(
         { _id: req.params.id },
         {
-          $pull: { like: req.user.id },
+          $pull: { likes: req.user._id },
         },
         { new: true }
       );

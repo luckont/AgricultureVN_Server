@@ -1,4 +1,5 @@
 const Post = require("../models/postModel");
+const Comments = require("../models/commentModel")
 
 const postController = {
   // create post
@@ -9,7 +10,10 @@ const postController = {
       await newPost.save();
       return res
         .status(200)
-        .json({ newPost, msg: "Tạo bài viết mới thành công !" });
+        .json({  newPost: {
+          ...newPost._doc,
+          user: req.user
+      }, msg: "Tạo bài viết mới thành công !" });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -37,14 +41,28 @@ const postController = {
     }
   },
 
+  // get user post
+  getUserPost: async (req, res) => {
+    try {
+      const posts = await Post.find({user: req.params.id}).sort("-createdAt");
+      return res.status(200).json({posts, result: posts.length});
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
+
   // get post
   getPost: async (req, res) => {
     try {
-      // const post = await Post.findById(req.params.id);
-      const post = await Post.findById(req.params.id).populate("comments");
-      return res.status(200).json(post);
+      const post = await Post.findById(req.params.id)
+        .populate("user like", " -password")
+        .populate({
+          path: "comments",
+          populate: { path: "user likes", select: "-password" },
+        });
+      return res.status(200).json({post});
     } catch (err) {
-      return res.status(500).json(err);
+      return res.status(500).json({ msg: err.message });
     }
   },
 
@@ -126,6 +144,23 @@ const postController = {
       return res.status(500).json({ msg: err.message });
     }
   },
+  deletePost: async (req, res) => {
+    try {
+        const post = await Post.findOneAndDelete({_id: req.params.id, user: req.user._id})
+        await Comments.deleteMany({_id: {$in: post.comments }})
+
+        res.json({
+            msg: 'Xóa bài viết thành công !',
+            newPost: {
+                ...post,
+                user: req.user
+            }
+        })
+
+    } catch (err) {
+        return res.status(500).json({msg: err.message})
+    }
+},
 };
 
 module.exports = postController;
