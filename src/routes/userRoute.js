@@ -28,4 +28,7 @@ router.get(
   userController.searchUser
 );
 
+//suggestion user
+router.get("/suggestionUser/result", jwtMiddleware.verifyToken, userController.suggestionsUser);
+
 module.exports = router;

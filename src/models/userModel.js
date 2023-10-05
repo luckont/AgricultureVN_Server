@@ -22,14 +22,15 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "https://res.cloudinary.com/duw0njssy/image/upload/v1695198799/image_default_AgricultureVN/logo_only_s3ioxv.png",
     },
-    followers:  [{
+    followers: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
     }],
-    subscribes:  [{
+    subscribes: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
     }],
+    saved: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }],
     desc: {
       type: String,
       maxlength: 50,
@@ -43,8 +44,3 @@ const userSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model("User", userSchema);
-
-// [{
-//   type: mongoose.Schema.Types.ObjectId,
-//   ref: 'User',
-// }]

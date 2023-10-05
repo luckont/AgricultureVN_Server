@@ -21,7 +21,7 @@ const userController = {
         .select("-password");
       return res.status(200).json({ user });
     } catch (err) {
-      return res.status(500).json({ msg: "sai" });
+      return res.status(500).json({ msg: err.message });
     }
   },
 
@@ -132,6 +132,24 @@ const userController = {
       return res.json({ users });
     } catch (err) {
       return res.status(500).json(err);
+    }
+  },
+  suggestionsUser: async (req, res) => {
+    try {
+      const newArr = [...req.user.subscribes, req.user._id]
+      const num = req.query.num || 10
+      const users = await User.aggregate([
+        { $match: { _id: { $nin: newArr } } },
+        { $sample: { size: Number(num) } },
+        { $lookup: { from: 'users', localField: 'followers', foreignField: '_id', as: 'followers' } },
+        { $lookup: { from: 'users', localField: 'subscribes', foreignField: '_id', as: 'subscribes' } },
+      ]).project("-password")
+      return res.json({
+        users,
+        result: users.length
+      })
+    } catch (err) {
+      return res.status(500).json({ msg: err.message })
     }
   },
 };

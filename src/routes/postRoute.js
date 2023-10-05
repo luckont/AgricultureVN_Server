@@ -26,4 +26,13 @@ router.put("/:id/like", jwtMiddleware.verifyToken, postController.likePost);
 //unlike post
 router.put("/:id/unlike", jwtMiddleware.verifyToken, postController.unlikePost);
 
+//save post
+router.put("/savePost/:id", jwtMiddleware.verifyToken, postController.savePost);
+
+//unsave post
+router.put("/unSavePost/:id", jwtMiddleware.verifyToken, postController.unSavePost);
+
+//get save post
+router.get("/getSavePosts/result", jwtMiddleware.verifyToken, postController.getSavePosts);
+
 module.exports = router;
