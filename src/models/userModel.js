@@ -20,17 +20,22 @@ const userSchema = new mongoose.Schema(
     },
     profilePicture: {
       type: String,
-      default: "https://res.cloudinary.com/duw0njssy/image/upload/v1695198799/image_default_AgricultureVN/logo_only_s3ioxv.png",
+      default:
+        "https://res.cloudinary.com/duw0njssy/image/upload/v1695198799/image_default_AgricultureVN/logo_only_s3ioxv.png",
     },
-    followers: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-    }],
-    subscribes: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-    }],
-    saved: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }],
+    followers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    subscribes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    saved: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     desc: {
       type: String,
       maxlength: 50,

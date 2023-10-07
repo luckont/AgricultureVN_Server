@@ -3,22 +3,22 @@ const bcrypt = require("bcrypt");
 
 const userController = {
   // GET ALL USERS
-  getAllUsers: async (req, res) => {
-    try {
-      const user = await User.find()
-        .populate("subscribes followers", "-password")
-        .select("-password");
-      return res.status(200).json(user);
-    } catch (err) {
-      return res.status(500).json(err);
-    }
-  },
+  // getAllUsers: async (req, res) => {
+  //   try {
+  //     const user = await User.find()
+  //       .populate("subscribes followers", "-password")
+  //       .select("-password");
+  //     return res.status(200).json(user);
+  //   } catch (err) {
+  //     return res.status(500).json(err);
+  //   }
+  // },
   // GET USER
   getUser: async (req, res) => {
     try {
       const user = await User.findById(req.params.id)
         .populate("subscribes followers", "-password")
-        .select("-password");
+        // .select("-password");
       return res.status(200).json({ user });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
@@ -74,13 +74,13 @@ const userController = {
           .status(500)
           .json({ msg: "Bạn đã theo dõi người dùng này !" });
 
-      await User.findOneAndUpdate(
+      const newUser = await User.findOneAndUpdate(
         { _id: req.params.id },
         {
           $push: { followers: req.user.id },
         },
         { new: true }
-      );
+      ).populate("subscribes followers").select("-password");
 
       await User.findByIdAndUpdate(
         { _id: req.user.id },
@@ -90,7 +90,7 @@ const userController = {
         { new: true }
       );
 
-      res.json({ msg: "Bạn đã bắt đầu theo dõi người này !" });
+      return res.status(200).json({ newUser });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -99,13 +99,13 @@ const userController = {
   //unfollow user
   unfollowUser: async (req, res) => {
     try {
-      await User.findOneAndUpdate(
+      const newUser = await User.findOneAndUpdate(
         { _id: req.params.id },
         {
           $pull: { followers: req.user.id },
         },
         { new: true }
-      );
+      ).populate("subscribes followers").select("-password");
 
       await User.findByIdAndUpdate(
         { _id: req.user.id },
@@ -115,7 +115,7 @@ const userController = {
         { new: true }
       );
 
-      res.json({ msg: "Bạn đã bỏ theo dõi người này !" });
+      return res.status(200).json({ newUser });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }

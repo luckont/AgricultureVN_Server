@@ -89,7 +89,7 @@ const postController = {
           img,
         }
       )
-        .populate("user like", "profilePicture username")
+        .populate("user like", "profilePicture username followers")
         .populate({
           path: "comments",
           populate: { path: "user likes", select: "-password" },
@@ -197,6 +197,7 @@ const postController = {
       return res.status(500).json({ msg: err.message });
     }
   },
+
   unSavePost: async (req, res) => {
     try {
       const save = await User.findOneAndUpdate(
@@ -215,6 +216,7 @@ const postController = {
       return res.status(500).json({ msg: err.message });
     }
   },
+
   getSavePosts: async (req, res) => {
     try {
         const features = new APIfeatures(Post.find({
@@ -231,7 +233,7 @@ const postController = {
     } catch (err) {
         return res.status(500).json({msg: err.message})
     }
-},
+  },
 };
 
 module.exports = postController;

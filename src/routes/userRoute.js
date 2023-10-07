@@ -4,7 +4,7 @@ const fileUploader = require("../middlewares/cloudinaryMiddleware");
 const jwtMiddleware = require("../middlewares/jwtMiddleware");
 
 //get all user
-router.get("/", userController.getAllUsers);
+// router.get("/", userController.getAllUsers);
 
 //get user
 router.get("/:id", jwtMiddleware.verifyToken, userController.getUser);

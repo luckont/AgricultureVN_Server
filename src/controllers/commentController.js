@@ -80,7 +80,7 @@ const commentController = {
 
   unlikeComment: async (req, res) => {
     try {
-      await Post.findOneAndUpdate(
+      await Comment.findOneAndUpdate(
         { _id: req.params.id },
         {
           $pull: { likes: req.user._id },

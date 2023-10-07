@@ -7,6 +7,7 @@ const authRoute = require("./src/routes/authRoute");
 const userRoute = require("./src/routes/userRoute");
 const postRoute = require("./src/routes/postRoute");
 const commentRoute = require("./src/routes/commentRoute");
+const SocketServer = require("./socketSever");
 
 const config = require("./src/configs");
 
@@ -20,6 +21,15 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+//socket
+const http = require("http").createServer(app);
+const io = require("socket.io")(http);
+
+io.on("connection", (socket) => {
+  console.log(socket.id)
+  SocketServer(socket)
+});
+
 //route
 app.use("/auth", authRoute);
 app.use("/user", userRoute);
@@ -32,7 +42,7 @@ mongoose
   .then(() => console.log("Connected to database!"))
   .catch((err) => console.error(err));
 
-app.listen(PORT, () => {
+http.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
