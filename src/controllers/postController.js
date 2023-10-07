@@ -3,17 +3,17 @@ const User = require("../models/userModel");
 const Comments = require("../models/commentModel");
 
 class APIfeatures {
-  constructor(query, queryString){
-      this.query = query;
-      this.queryString = queryString;
+  constructor(query, queryString) {
+    this.query = query;
+    this.queryString = queryString;
   }
 
-  paginating(){
-      const page = this.queryString.page * 1 || 1
-      const limit = this.queryString.limit * 1 || 9
-      const skip = (page - 1) * limit
-      this.query = this.query.skip(skip).limit(limit)
-      return this;
+  paginating() {
+    const page = this.queryString.page * 1 || 1
+    const limit = this.queryString.limit * 1 || 9
+    const skip = (page - 1) * limit
+    this.query = this.query.skip(skip).limit(limit)
+    return this;
   }
 }
 
@@ -104,20 +104,6 @@ const postController = {
       });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
-    }
-  },
-
-  deletePost: async (req, res) => {
-    try {
-      const post = await Post.findById(req.params.id);
-      if (post.userId === req.body.userId) {
-        // await post.deleteOne();
-        return res.status(200).json("The post has been deleted !");
-      } else {
-        return res.status(403).json("You can't delete this post !");
-      }
-    } catch (err) {
-      return res.status(500).json(err);
     }
   },
 
@@ -219,19 +205,19 @@ const postController = {
 
   getSavePosts: async (req, res) => {
     try {
-        const features = new APIfeatures(Post.find({
-            _id: {$in: req.user.saved}
-        }), req.query).paginating()
+      const features = new APIfeatures(Post.find({
+        _id: { $in: req.user.saved }
+      }), req.query).paginating()
 
-        const savePosts = await features.query.sort("-createdAt")
+      const savePosts = await features.query.sort("-createdAt")
 
-        return res.status(200).json({
-            savePosts,
-            result: savePosts.length
-        })
+      return res.status(200).json({
+        savePosts,
+        result: savePosts.length
+      })
 
     } catch (err) {
-        return res.status(500).json({msg: err.message})
+      return res.status(500).json({ msg: err.message })
     }
   },
 };
