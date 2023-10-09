@@ -124,8 +124,12 @@ const userController = {
   //search user
   searchUser: async (req, res) => {
     try {
+      const searchQuery = req.query.username;
+
+      const regex = new RegExp(searchQuery, 'i');
+
       const users = await User.find({
-        username: { $regex: req.query.username },
+        username: { $regex: regex },
       })
         .limit(10)
         .select("username profilePicture");
