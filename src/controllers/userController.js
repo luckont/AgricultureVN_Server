@@ -18,7 +18,7 @@ const userController = {
     try {
       const user = await User.findById(req.params.id)
         .populate("subscribes followers", "-password")
-        // .select("-password");
+      // .select("-password");
       return res.status(200).json({ user });
     } catch (err) {
       return res.status(500).json({ msg: err.message });

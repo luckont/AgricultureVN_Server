@@ -7,11 +7,11 @@ const commentController = {
       const { postId, content, tag, reply, postUserId } = req.body;
 
       const post = await Post.findById(postId)
-      if(!post) return res.status(400).json({msg: "Bài viết không tồn tại !"})
+      if (!post) return res.status(400).json({ msg: "Bài viết không tồn tại !" })
 
-      if(reply){
-          const cm = await Comment.findById(reply)
-          if(!cm) return res.status(400).json({msg: "Bình luận không tồn tại !"})
+      if (reply) {
+        const cm = await Comment.findById(reply)
+        if (!cm) return res.status(400).json({ msg: "Bình luận không tồn tại !" })
       }
 
       const newComment = new Comment({
@@ -19,7 +19,7 @@ const commentController = {
         content,
         tag,
         reply,
-        postUserId, 
+        postUserId,
         postId
       });
 

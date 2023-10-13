@@ -80,10 +80,8 @@ const authController = {
             userId: user.id,
           });
           await newRefreshToken.save();
-          console.log("Them refreshtoken vao database thanh cong !");
         } else {
           await RefreshToken.findOneAndUpdate({ token: refreshToken });
-          console.log("Refrestoken da ton tai");
         }
         res.cookie("refreshToken", refreshToken, {
           httpOnly: true,
