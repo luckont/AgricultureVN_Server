@@ -55,7 +55,7 @@ const messageController = {
                 recipients: req.user._id
             }), req.query).paginating()
             const conversations = await features.query.sort("updatedAt")
-                .populate("recipients", "username profilePicture")
+                .populate("recipients", "username profilePicture roles")
 
             return res.status(200).json({
                 conversations,

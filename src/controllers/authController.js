@@ -47,6 +47,7 @@ const authController = {
         username: req.body.username,
         phoneNumber: req.body.phoneNumber,
         password: hashed,
+        roles: req.body.roles
       });
       await newUser.save();
       return res.status(200).json({ msg: "Đăng ký thành công !" });
