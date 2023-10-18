@@ -3,16 +3,16 @@ const bcrypt = require("bcrypt");
 
 const userController = {
   // GET ALL USERS
-  // getAllUsers: async (req, res) => {
-  //   try {
-  //     const user = await User.find()
-  //       .populate("subscribes followers", "-password")
-  //       .select("-password");
-  //     return res.status(200).json(user);
-  //   } catch (err) {
-  //     return res.status(500).json(err);
-  //   }
-  // },
+  getAllUsers: async (req, res) => {
+    try {
+      const user = await User.find()
+        .populate("subscribes followers", "-password")
+        .select("-password");
+      return res.status(200).json(user);
+    } catch (err) {
+      return res.status(500).json(err);
+    }
+  },
   // GET USER
   getUser: async (req, res) => {
     try {
@@ -132,7 +132,7 @@ const userController = {
         username: { $regex: regex },
       })
         .limit(10)
-        .select("username profilePicture");
+        .select("username profilePicture roles");
       return res.json({ users });
     } catch (err) {
       return res.status(500).json(err);

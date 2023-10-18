@@ -5,6 +5,9 @@ const jwtMiddleware = require("../middlewares/jwtMiddleware");
 //get user
 router.get("/:id", jwtMiddleware.verifyToken, userController.getUser);
 
+//get all user
+router.get("/", jwtMiddleware.verifyToken, userController.getAllUsers);
+
 //delete user
 router.delete("/:id", userController.deleteUser);
 

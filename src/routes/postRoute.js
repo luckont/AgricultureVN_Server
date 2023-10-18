@@ -14,6 +14,9 @@ router.get("/", jwtMiddleware.verifyToken, postController.getAllPost);
 //get post
 router.get("/:id", jwtMiddleware.verifyToken, postController.getPost);
 
+//get news post
+router.get("/news/result", jwtMiddleware.verifyToken, postController.getNewsPost)
+
 //update post
 router.put("/:id", jwtMiddleware.verifyToken, postController.updatePost);
 

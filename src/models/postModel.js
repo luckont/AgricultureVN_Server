@@ -7,6 +7,7 @@ const postSchema = new mongoose.Schema(
       ref: 'User',
     },
     desc: String,
+    hashtag: String,
     img: {
       type: Array,
       default: [],

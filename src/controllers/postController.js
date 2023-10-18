@@ -20,8 +20,8 @@ class APIfeatures {
 const postController = {
   createPost: async (req, res) => {
     try {
-      const { desc, img } = req.body;
-      const newPost = new Post({ desc, img, user: req.user._id });
+      const { desc, img, hashtag } = req.body;
+      const newPost = new Post({ hashtag, desc, img, user: req.user._id });
       await newPost.save();
       return res.status(200).json({
         newPost: {
@@ -40,6 +40,25 @@ const postController = {
       const post = await Post.find({
         user: [...req.user.subscribes, req.user._id],
       })
+        .sort("-createdAt")
+        .populate("user like", " -password")
+        .populate({
+          path: "comments",
+          populate: { path: "user likes", select: "-password" },
+        });
+      return res.status(200).json({
+        msg: "Lấy bài viết thành công !",
+        result: post.length,
+        post,
+      });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
+
+  getNewsPost: async (req, res) => {
+    try {
+      const post = await Post.find()
         .sort("-createdAt")
         .populate("user like", " -password")
         .populate({
@@ -81,12 +100,13 @@ const postController = {
 
   updatePost: async (req, res) => {
     try {
-      const { desc, img } = req.body;
+      const { hashtag, desc, img } = req.body;
       const post = await Post.findOneAndUpdate(
         { _id: req.params.id },
         {
           desc,
           img,
+          hashtag
         }
       )
         .populate("user like", "profilePicture username followers")
@@ -100,6 +120,7 @@ const postController = {
           ...post._doc,
           desc,
           img,
+          hashtag
         },
       });
     } catch (err) {
