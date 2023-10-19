@@ -10,6 +10,7 @@ const postRoute = require("./src/routes/postRoute");
 const commentRoute = require("./src/routes/commentRoute");
 const notifyRoute = require("./src/routes/notifyRoute");
 const messageRoute = require("./src/routes/messageRoute");
+const searchRoute = require("./src/routes/searchRoute");
 
 const config = require("./src/configs");
 
@@ -37,7 +38,8 @@ app.use("/user", userRoute);
 app.use("/post", postRoute);
 app.use("/comment", commentRoute);
 app.use("/notify", notifyRoute);
-app.use("/message", messageRoute)
+app.use("/message", messageRoute);
+app.use("/search", searchRoute);
 
 //database connection
 mongoose
