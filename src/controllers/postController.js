@@ -21,6 +21,7 @@ const postController = {
   createPost: async (req, res) => {
     try {
       const { desc, img, hashtag } = req.body;
+
       const newPost = new Post({ hashtag, desc, img, user: req.user._id });
       await newPost.save();
       return res.status(200).json({

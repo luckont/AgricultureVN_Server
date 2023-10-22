@@ -70,8 +70,8 @@ const messageController = {
         try {
             const features = new APIfeatures(Messages.find({
                 $or: [
-                    {sender: req.user._id, recipient: req.params.id},
-                    {sender: req.params.id, recipient: req.user._id}
+                    { sender: req.user._id, recipient: req.params.id },
+                    { sender: req.params.id, recipient: req.user._id }
                 ]
             }), req.query).paginating()
 
@@ -87,25 +87,25 @@ const messageController = {
     },
     deleteMessages: async (req, res) => {
         try {
-            await Messages.findOneAndDelete({_id: req.params.id, sender: req.user._id})
-            return res.status(200).json({msg: 'Xóa tin nhắn !'})
+            await Messages.findOneAndDelete({ _id: req.params.id, sender: req.user._id })
+            return res.status(200).json({ msg: 'Xóa tin nhắn !' })
         } catch (err) {
-            return res.status(500).json({msg: err.message})
+            return res.status(500).json({ msg: err.message })
         }
     },
     deleteConversation: async (req, res) => {
         try {
             const newConver = await Conversations.findOneAndDelete({
                 $or: [
-                    {recipients: [req.user._id, req.params.id]},
-                    {recipients: [req.params.id, req.user._id]}
+                    { recipients: [req.user._id, req.params.id] },
+                    { recipients: [req.params.id, req.user._id] }
                 ]
             })
-            await Messages.deleteMany({conversation: newConver._id})
-            
-            res.status(200).json({msg: 'Xóa đoạn hội thoại!'})
+            await Messages.deleteMany({ conversation: newConver._id })
+
+            res.status(200).json({ msg: 'Xóa đoạn hội thoại!' })
         } catch (err) {
-            return res.status(500).json({msg: err.message})
+            return res.status(500).json({ msg: err.message })
         }
     },
 }

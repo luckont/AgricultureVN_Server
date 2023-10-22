@@ -11,6 +11,7 @@ const commentRoute = require("./src/routes/commentRoute");
 const notifyRoute = require("./src/routes/notifyRoute");
 const messageRoute = require("./src/routes/messageRoute");
 const searchRoute = require("./src/routes/searchRoute");
+const diaryRoute = require("./src/routes/diaryRoute");
 
 const config = require("./src/configs");
 
@@ -40,6 +41,7 @@ app.use("/comment", commentRoute);
 app.use("/notify", notifyRoute);
 app.use("/message", messageRoute);
 app.use("/search", searchRoute);
+app.use("/diary", diaryRoute);
 
 //database connection
 mongoose
