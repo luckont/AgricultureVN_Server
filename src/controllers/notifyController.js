@@ -38,7 +38,7 @@ const notifyController = {
   getNotifies: async (req, res) => {
     try {
       const notifies = await Notifies.find({ recipients: req.user._id })
-        .sort("-createAt")
+        .sort("-createdAt")
         .populate("user", "-password");
 
       return res.json({ notifies });
