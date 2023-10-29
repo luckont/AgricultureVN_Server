@@ -38,6 +38,20 @@ const diaryController = {
       return res.status(500).json({ msg: err.message });
     }
   },
+  getDiaries: async (req, res) => {
+    try {
+      const diaries = await Diary.find({
+        user: [...req.user.subscribes, req.user._id],
+      }).populate("recipients user").sort("-createdAt");
+      return res.status(200).json({
+        msg: "Lấy nhật ký thành công !",
+        result: diaries.length,
+        diaries,
+      });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
   updateDiary: async (req, res) => {
     try {
       const { text, media, recipients } = req.body;

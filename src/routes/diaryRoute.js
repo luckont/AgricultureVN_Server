@@ -5,6 +5,8 @@ const router = require("express").Router();
 
 router.get("/:id", jwtMiddleware.verifyToken, diaryController.getDiaryById)
 
+router.get("/", jwtMiddleware.verifyToken, diaryController.getDiaries)
+
 router.get("/g/:id", jwtMiddleware.verifyToken, diaryController.getDiary);
 
 router.post("/", jwtMiddleware.verifyToken, diaryController.createDiary)
