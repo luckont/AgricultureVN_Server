@@ -36,6 +36,7 @@ const userSchema = new mongoose.Schema(
       },
     ],
     saved: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    savedDiary: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     desc: {
       type: String,
       maxlength: 50,
