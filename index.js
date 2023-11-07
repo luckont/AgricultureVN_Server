@@ -12,6 +12,7 @@ const notifyRoute = require("./src/routes/notifyRoute");
 const messageRoute = require("./src/routes/messageRoute");
 const searchRoute = require("./src/routes/searchRoute");
 const diaryRoute = require("./src/routes/diaryRoute");
+const productRoute = require("./src/routes/productRoute");
 
 const config = require("./src/configs");
 
@@ -42,6 +43,7 @@ app.use("/notify", notifyRoute);
 app.use("/message", messageRoute);
 app.use("/search", searchRoute);
 app.use("/diary", diaryRoute);
+app.use("/market", productRoute);
 
 //database connection
 mongoose
