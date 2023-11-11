@@ -121,5 +121,23 @@ const productController = {
       return res.status(500).json({ msg: err.message });
     }
   },
+  searchProduct: async (req, res) => {
+    try {
+      const search = req.query.search;
+
+      const regex = new RegExp(search, 'i');
+
+      const products = await Product.find({
+        productName: {$regex: regex} ,
+      }).populate("user");
+      return res.status(200).json({
+        products,
+        result: products.length,
+        msg: "Lấy danh mục thành công!",
+      });
+    }catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+   }
 };
 module.exports = productController;

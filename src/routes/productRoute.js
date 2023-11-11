@@ -12,6 +12,8 @@ router.get("/user_products/:id", jwtMiddleware.verifyToken, productController.ge
 
 router.get("/s/category", jwtMiddleware.verifyToken, productController.categoriesSelect)
 
+router.get("/s/search", jwtMiddleware.verifyToken, productController.searchProduct)
+
 router.put("/:id", jwtMiddleware.verifyToken, productController.updateProduct);
 
 router.delete("/:id", jwtMiddleware.verifyToken, productController.deleteProduct);
