@@ -23,6 +23,25 @@ const reportController = {
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }
+    },
+    updateReport: async (req, res) => {
+        try {
+            const report = await Report.findByIdAndUpdate(
+                req.params.id,
+                req.body,
+            );
+            return res.status(200).json({ report });
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    },
+    deleteReport: async (req, res) => { 
+        try {
+            const report = await Report.findByIdAndDelete(req.params.id);
+            return res.status(200).json({ report });
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
     }
 }
 module.exports = reportController;
